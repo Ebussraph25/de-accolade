@@ -47,7 +47,11 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "i.ytimg.com" },
       ...(supabaseHost ? [{ protocol: "https" as const, hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }] : []),
     ],
-    formats: ["image/avif", "image/webp"],
+    // Tuned for Vercel's free (Hobby) image limits: one modern format, fewer sizes, long cache.
+    formats: ["image/webp"],
+    deviceSizes: [640, 828, 1200, 1920],
+    imageSizes: [96, 256, 384],
+    minimumCacheTTL: 2678400, // 31 days
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

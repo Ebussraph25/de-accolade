@@ -52,7 +52,7 @@ Built with Next.js 16, React 19, TypeScript and Tailwind CSS 4. Supabase provide
 | Temporary address | https://de-accolade.vercel.app (hidden from Google until the real domain is connected) |
 | Database, sign-in and media | Supabase project `de-accolade` (`cuhgaezwszmwgbdlzlcy`), Paris (`eu-west-3`) |
 | Migrations applied | `supabase/migrations/0001_init.sql`, `0002_staff_management.sql`, `0003_hardening.sql` |
-| Vercel settings | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `RATE_LIMIT_SALT`, `REQUIRE_ADMIN_2FA=true` |
+| Vercel settings | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `RATE_LIMIT_SALT`, `REQUIRE_ADMIN_2FA=true`, `CRON_SECRET` |
 
 Until the newsroom publishes its first real story, the public site shows clearly labelled **sample stories**. They are not stored in the database, are marked `noindex`, never appear in sitemaps, and vanish automatically once one real story is published.
 
@@ -64,6 +64,23 @@ Until the newsroom publishes its first real story, the public site shows clearly
 4. In Vercel, open **Deployments → ⋯ on the latest → Redeploy**. The site now uses the new domain for canonical links, sitemaps and share images, and allows Google to index it. No settings need changing.
 5. **Google Search Console**: add the domain property (DNS verification through your registrar is simplest), then submit `https://yourdomain.com/sitemap.xml` and `https://yourdomain.com/news-sitemap.xml`. For Google News, add the publication in the Google News Publisher Center.
 6. Publish real stories. The sample stories disappear on their own.
+
+## Running on free plans
+
+The site is set up to run at no cost apart from the domain:
+
+| Service | Plan | What keeps it within the free limits |
+| --- | --- | --- |
+| Vercel (hosting) | Hobby, free | Pages and data are cached. Images use one format (WebP), four sizes and a 31-day cache, to stay under the monthly image-optimisation allowance. |
+| Supabase (database, sign-in, media) | Free | A daily job (`vercel.json` → `/api/keepalive`) stops the project being paused for inactivity. Photos are resized to 1920px and compressed to WebP in the browser before upload (typically 200–400 KB each), so the 1 GB storage holds thousands of photos. |
+| GitHub | Free | Code and automatic deploys |
+| YouTube | Free | Video hosting (embed YouTube links rather than uploading video files) |
+
+Things to know about the free plans:
+- **Vercel Hobby is intended for non-commercial use.** It's fine while the site is growing. Once it earns money (paid ads, sponsored stories, paid event coverage), Vercel's terms expect the Pro plan ($20/month). The free alternative is moving to Netlify's free plan, which allows commercial sites and runs this Next.js code.
+- **No automatic database backups** on Supabase Free. Export subscribers from **Inbox → Download CSV** now and then. Every story's text is also visible on the site itself.
+- **Limits to watch** (Vercel and Supabase dashboards → Usage): Supabase 500 MB database, 1 GB storage and 5 GB bandwidth a month; Vercel 100 GB bandwidth a month. A small, growing news site sits well inside these.
+- If a free Supabase project ever does get paused, open it in the Supabase dashboard and click **Restore**. Nothing is lost.
 
 ## Newsroom accounts
 
@@ -80,7 +97,6 @@ Until the newsroom publishes its first real story, the public site shows clearly
 - [ ] Replace the contact email, phone, WhatsApp and social links. In Vercel, go to **Settings → Environment Variables** and add `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_CONTACT_PHONE`, `NEXT_PUBLIC_WHATSAPP_NUMBER`, `NEXT_PUBLIC_FACEBOOK_URL`, and so on (see `.env.example`), then redeploy.
 - [ ] Have a native speaker review the Igbo, Yoruba and Hausa interface wording in `lib/i18n.ts`.
 - [ ] Have a legal adviser review `/privacy` and `/terms` (Nigeria Data Protection Act 2023).
-- [ ] **Supabase plan.** Free projects pause after a week with no activity and have no automatic backups. Upgrading the organisation to **Pro** gives daily backups and no pausing, which is recommended for a live newspaper.
 - [ ] Supabase → **Authentication → Sign In / Providers**: turn off "Allow new users to sign up" (accounts are created by super admins; self-sign-ups get no access anyway). Also turn on **leaked password protection**.
 - [ ] Optional email: add a custom SMTP sender under Supabase **Authentication → Emails**, and set **URL Configuration → Site URL** to your domain with `https://yourdomain.com/auth/callback` as a redirect URL. This makes "Forgot password?" emails work.
 - [ ] Optional: `NEXT_PUBLIC_GA_ID` (Google Analytics 4), Vercel Analytics (one click in the Vercel dashboard), `RESEND_API_KEY` for email alerts on new messages and bookings.

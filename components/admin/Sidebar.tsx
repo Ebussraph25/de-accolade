@@ -32,7 +32,7 @@ export function Sidebar({ items, footer }: { items: NavItem[]; footer: React.Rea
   return (
     <>
       <div className="flex items-center justify-between bg-navy-900 px-4 py-3 text-white lg:hidden">
-        <Link href="/admin/dashboard" className="text-white"><Wordmark size="sm" /></Link>
+        <Link href="/admin/dashboard" className="text-white"><Wordmark size="sm" tone="onDark" /></Link>
         <button onClick={() => setOpen(true)} aria-label="Open newsroom menu" className="p-1"><MenuIcon /></button>
       </div>
       {open && (
@@ -45,7 +45,7 @@ export function Sidebar({ items, footer }: { items: NavItem[]; footer: React.Rea
         </div>
       )}
       <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col bg-navy-900 p-4 lg:flex">
-        <Link href="/admin/dashboard" className="mb-8 block px-2 pt-2 text-white"><Wordmark size="sm" /></Link>
+        <Link href="/admin/dashboard" className="mb-8 block px-2 pt-2 text-white"><Wordmark size="sm" tone="onDark" /></Link>
         {nav}
       </aside>
     </>

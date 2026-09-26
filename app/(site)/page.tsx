@@ -11,7 +11,7 @@ import { VideoDesk } from "@/components/news/VideoDesk";
 import { AdSlot } from "@/components/site/AdSlot";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
-import { Laurel } from "@/components/site/Logo";
+import { BrandMark } from "@/components/site/Logo";
 
 export default async function HomePage() {
   const lang = await getLang();
@@ -137,7 +137,7 @@ export default async function HomePage() {
             return (
               <div key={h.slug} className="flex flex-col bg-bg">
                 <div className="relative overflow-hidden bg-navy-900 px-6 py-7 text-white dark:bg-surface">
-                  <Laurel className="absolute -right-6 -top-4 h-32 w-32 text-gold-500 opacity-15" />
+                  <BrandMark tone="onDark" className="pointer-events-none absolute -right-3 -top-2 h-28 w-auto opacity-15" />
                   <p className="font-serif text-[2.4rem] font-semibold leading-none" style={{ fontVariationSettings: '"opsz" 72' }}>{h.name}</p>
                   <p className="mt-2 max-w-[18rem] text-[0.92rem] text-white/75">{h.blurb}</p>
                 </div>

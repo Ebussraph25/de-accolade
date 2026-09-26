@@ -19,7 +19,7 @@ export function Footer() {
       <div className="h-1 bg-gold-500" />
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <Link href="/" aria-label="De Accolade home" className="text-white"><Wordmark size="sm" /></Link>
+          <Link href="/" aria-label="De Accolade home" className="text-white"><Wordmark size="sm" tone="onDark" /></Link>
           <p className="mt-4 max-w-sm font-serif text-lg italic text-white/90">{site.tagline}</p>
           <p className="mt-3 max-w-sm text-[0.9rem] leading-relaxed text-white/70">{site.parentLine}. Community journalism, culture and heritage from Nigeria and the diaspora.</p>
           <SocialLinks className="mt-5 flex items-center gap-4 text-white" />

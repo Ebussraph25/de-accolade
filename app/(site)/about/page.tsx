@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/lib/site";
-import { Laurel } from "@/components/site/Logo";
+import { BrandMark } from "@/components/site/Logo";
 
 export const metadata: Metadata = {
   title: "About us",
@@ -15,7 +15,7 @@ export default function AboutPage() {
   return (
     <div>
       <section className="relative overflow-hidden bg-navy-900 text-white dark:bg-navy-950">
-        <Laurel className="absolute -right-16 -top-10 h-[26rem] w-[26rem] text-gold-500 opacity-10" />
+        <BrandMark tone="onDark" className="pointer-events-none absolute -right-10 top-6 h-[22rem] w-auto opacity-10" />
         <div className="container-page relative max-w-4xl py-16">
           <h1 className="headline text-[2.6rem] md:text-[3.6rem]">{site.tagline}</h1>
           <p className="mt-5 max-w-2xl font-serif text-xl leading-relaxed text-white/80">

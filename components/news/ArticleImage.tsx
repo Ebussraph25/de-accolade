@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Laurel } from "../site/Logo";
+import { BrandMark } from "../site/Logo";
 import { categoryName, getCategory } from "@/lib/taxonomy";
 
 const tones: Record<string, [string, string]> = {
@@ -56,7 +56,7 @@ export function ArticleImage({
         </defs>
         <rect width="100%" height="100%" fill={`url(#p-${section})`} />
       </svg>
-      <Laurel className="absolute -bottom-[18%] -right-[8%] h-[85%] w-auto text-gold-400 opacity-25" />
+      <BrandMark tone="onDark" className="pointer-events-none absolute -bottom-[6%] -right-[3%] h-[78%] w-auto opacity-20" />
       <span className="absolute bottom-3 left-3 font-serif text-sm italic text-gold-100/90 md:text-base">
         {categoryName(category)}
       </span>

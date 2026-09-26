@@ -37,6 +37,11 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   agentRules: false,
+  // Share-image routes read these at runtime; make sure they ship with the serverless functions.
+  outputFileTracingIncludes: {
+    "/og/[slug]": ["./public/brand/*-light.png", "./assets/fonts/*"],
+    "/opengraph-image": ["./public/brand/*-light.png", "./assets/fonts/*"],
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "i.ytimg.com" },

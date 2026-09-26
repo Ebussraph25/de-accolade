@@ -5,7 +5,7 @@ export function AuthShell({ title, children, subtitle }: { title: string; subtit
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="hidden flex-col justify-between bg-navy-900 p-12 text-white lg:flex">
-        <Link href="/" className="text-white"><Wordmark size="sm" /></Link>
+        <Link href="/" className="text-white"><Wordmark size="sm" tone="onDark" /></Link>
         <div>
           <p className="headline text-4xl leading-tight">Your Voice. Our Community. Our Story.</p>
           <p className="mt-3 text-white/70">De Accolade newsroom: write, edit and publish.</p>

@@ -23,7 +23,7 @@ Built with Next.js 16, React 19, TypeScript and Tailwind CSS 4. Supabase provide
 - Newsletter sign-up
 
 **Newsroom (`/admin`)**
-- Email/password sign-in, password reset, invite-only accounts, optional or enforced two-factor authentication (TOTP)
+- Email/password sign-in, accounts created by super admins (no email service needed), password resets by super admins, enforced two-factor authentication (TOTP)
 - Roles: **Super admin** (everything, plus team and activity log), **Editor** (publish, edit, media, moderation, inbox) and **Reporter** (drafts and submitting for review). The database enforces these rules itself, not just the UI.
 - Story editor: Markdown with toolbar and live preview, image uploads, gallery with captions and credits, documents, YouTube or MP4 video, SEO title and description with Google preview, tags, byline, language and translation linking, scheduling, front-page lead and breaking flags
 - Live timeline posting for live coverage
@@ -43,53 +43,47 @@ Built with Next.js 16, React 19, TypeScript and Tailwind CSS 4. Supabase provide
 
 ---
 
-## Deploying to Vercel with your domain
+## Current setup (already done)
 
-### 1. Create the database (Supabase, about 10 minutes)
-1. Create a project at [supabase.com](https://supabase.com). Choose the region closest to your readers (for Nigeria, **West EU (London)** or **Central EU (Frankfurt)**).
-2. Open **SQL Editor → New query**, paste the contents of `supabase/migrations/0001_init.sql`, then click **Run**. This creates the tables, security rules and the `media` storage bucket. The script is safe to run again.
-3. Go to **Authentication → Sign In / Providers → Email**:
-   - Turn **off** "Allow new users to sign up". Accounts are invite-only. Even if sign-ups stay on, a new account has no newsroom access until a super admin grants a role.
-4. Go to **Authentication → URL Configuration**:
-   - **Site URL**: `https://www.yourdomain.com`
-   - **Redirect URLs**: add `https://www.yourdomain.com/auth/callback` (and your `*.vercel.app` preview URL if you want to test there).
-5. Copy the **Project URL**, **anon public key** and **service_role key** from **Project Settings → API**.
+| Piece | Where |
+| --- | --- |
+| Code | GitHub `Ebussraph25/de-accolade`. Every push to `main` deploys automatically |
+| Hosting | Vercel project `de-accolade`, served from Paris (`cdg1`) |
+| Temporary address | https://de-accolade.vercel.app (hidden from Google until the real domain is connected) |
+| Database, sign-in and media | Supabase project `de-accolade` (`cuhgaezwszmwgbdlzlcy`), Paris (`eu-west-3`) |
+| Migrations applied | `supabase/migrations/0001_init.sql`, `0002_staff_management.sql`, `0003_hardening.sql` |
+| Vercel settings | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `RATE_LIMIT_SALT`, `REQUIRE_ADMIN_2FA=true` |
 
-### 2. Deploy
-1. Push this folder to a GitHub repository.
-2. In Vercel: **Add New → Project → Import** the repository. Vercel detects Next.js automatically.
-3. Add the environment variables from `.env.example` (at minimum `NEXT_PUBLIC_SITE_URL`, the three Supabase values and `RATE_LIMIT_SALT`).
-4. Click **Deploy**.
-5. Optional: under **Settings → Functions**, set the region to match your Supabase region (e.g. `lhr1` London or `fra1` Frankfurt) for faster page loads.
+Until the newsroom publishes its first real story, the public site shows clearly labelled **sample stories**. They are not stored in the database, are marked `noindex`, never appear in sitemaps, and vanish automatically once one real story is published.
 
-### 3. Connect your paid domain
-1. In Vercel: **Project → Settings → Domains → Add** `yourdomain.com` and `www.yourdomain.com`.
-2. At your domain registrar, add the DNS records Vercel shows. Usually that is an `A` record for the apex pointing to Vercel's IP and a `CNAME` for `www` to `cname.vercel-dns.com`. Alternatively, switch the domain's nameservers to Vercel.
-3. SSL certificates are issued automatically.
-4. Make sure `NEXT_PUBLIC_SITE_URL` matches the primary domain, then redeploy.
+## Going live on your domain
 
-### 4. First admin
-1. In Supabase: **Authentication → Users → Add user**. Enter your email and a strong password, and tick "Auto confirm".
-2. In **SQL Editor**, run:
-   ```sql
-   update public.profiles
-   set role = 'super_admin', full_name = 'Your Name', slug = 'your-name'
-   where id = (select id from auth.users where email = 'you@example.com');
-   ```
-3. Sign in at `https://yourdomain.com/admin/login`, open **My account** and turn on two-factor authentication.
-4. Invite the rest of the team from **Team & activity**. They receive an email to set their password.
+1. **Buy the domain** from any registrar.
+2. In Vercel, open **de-accolade → Settings → Domains → Add**. Enter `yourdomain.com` and choose to also add `www.yourdomain.com`.
+3. At your registrar, add the DNS records Vercel shows. Usually that's an `A` record for `@` and a `CNAME` for `www` pointing to Vercel. SSL is issued automatically within minutes.
+4. In Vercel, open **Deployments → ⋯ on the latest → Redeploy**. The site now uses the new domain for canonical links, sitemaps and share images, and allows Google to index it. No settings need changing.
+5. **Google Search Console**: add the domain property (DNS verification through your registrar is simplest), then submit `https://yourdomain.com/sitemap.xml` and `https://yourdomain.com/news-sitemap.xml`. For Google News, add the publication in the Google News Publisher Center.
+6. Publish real stories. The sample stories disappear on their own.
 
-### 5. Go-live checklist
-- [ ] Publish at least one story and mark one as **Front-page lead**
-- [ ] Add headlines to the **Breaking ticker** (or leave it empty to hide it)
-- [ ] Fill in contact email, phone, WhatsApp and social links in the environment variables
-- [ ] Have a native speaker review the Igbo, Yoruba and Hausa interface wording in `lib/i18n.ts`
-- [ ] Have your legal adviser review `/privacy` and `/terms` (including the Nigeria Data Protection Act 2023)
-- [ ] Submit `https://yourdomain.com/sitemap.xml` and `news-sitemap.xml` in Google Search Console; apply to Google News via the Publisher Center
-- [ ] Optional: add `NEXT_PUBLIC_GA_ID` (Google Analytics 4) and enable **Vercel Analytics** in the Vercel dashboard
-- [ ] Optional: add `RESEND_API_KEY` for email alerts on new messages and bookings
-- [ ] Supabase: enable **Point-in-Time Recovery** or daily backups (Pro plan) for the backup requirement
-- [ ] Supabase: configure a custom SMTP sender under Authentication → Emails so invitations come from your domain
+## Newsroom accounts
+
+- The first **super admin** has been created. Sign in at `/admin/login`. Two-factor authentication is required: on first sign-in you're taken to **My account** to scan a QR code with Google Authenticator or a similar app.
+- Add colleagues from **Team & activity → Add a team member**. You get a temporary password to share privately; they change it under **My account**.
+- Forgotten password: a super admin clicks **Reset password** next to the person in **Team & activity**.
+- If every super admin is ever locked out, create a new one in the Supabase SQL editor:
+  ```sql
+  select public.create_staff_account('you@example.com', 'Your Name', 'super_admin', 'a-long-temporary-password');
+  ```
+
+## Recommended before or soon after launch
+
+- [ ] Replace the contact email, phone, WhatsApp and social links. In Vercel, go to **Settings → Environment Variables** and add `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_CONTACT_PHONE`, `NEXT_PUBLIC_WHATSAPP_NUMBER`, `NEXT_PUBLIC_FACEBOOK_URL`, and so on (see `.env.example`), then redeploy.
+- [ ] Have a native speaker review the Igbo, Yoruba and Hausa interface wording in `lib/i18n.ts`.
+- [ ] Have a legal adviser review `/privacy` and `/terms` (Nigeria Data Protection Act 2023).
+- [ ] **Supabase plan.** Free projects pause after a week with no activity and have no automatic backups. Upgrading the organisation to **Pro** gives daily backups and no pausing, which is recommended for a live newspaper.
+- [ ] Supabase → **Authentication → Sign In / Providers**: turn off "Allow new users to sign up" (accounts are created by super admins; self-sign-ups get no access anyway). Also turn on **leaked password protection**.
+- [ ] Optional email: add a custom SMTP sender under Supabase **Authentication → Emails**, and set **URL Configuration → Site URL** to your domain with `https://yourdomain.com/auth/callback` as a redirect URL. This makes "Forgot password?" emails work.
+- [ ] Optional: `NEXT_PUBLIC_GA_ID` (Google Analytics 4), Vercel Analytics (one click in the Vercel dashboard), `RESEND_API_KEY` for email alerts on new messages and bookings.
 
 ---
 
@@ -124,7 +118,7 @@ app/
   admin/               newsroom: login (+ MFA, reset), dashboard, articles, comments, breaking,
                        inbox, team, account; actions.ts holds every server action
   api/                 newsletter, contact, booking, comments, views (validated, rate limited)
-  auth/callback/       email-link handler (invites, password reset)
+  auth/callback/       email-link handler (password-reset emails, when an email sender is configured)
   og/[slug]/           generated share images
   sitemap.ts, robots.ts, news-sitemap.xml/, feed.xml/, manifest.ts
 components/            site/, news/, forms/, admin/

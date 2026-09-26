@@ -99,7 +99,7 @@ const toCard = (a: Article): ArticleCard => ({
 // Localisation: list originals, then swap in a translation for the reader's language.
 // --------------------------------------------------------------------------
 async function localize(cards: ArticleCard[], lang: LangCode): Promise<ArticleCard[]> {
-  const db = publicClient();
+  const db = await contentDb();
   if (!db || lang === "en" || cards.length === 0) return cards;
   const { data } = await db
     .from("articles")
@@ -118,19 +118,51 @@ function published(q: any): any {
 }
 
 // --------------------------------------------------------------------------
+// Sample stories are shown until the newsroom publishes its first real story,
+// so a freshly connected site never looks empty. They are never written to the
+// database, never listed in sitemaps, and marked noindex.
+// --------------------------------------------------------------------------
+const hasPublishedStories = unstable_cache(
+  async (): Promise<boolean> => {
+    const db = publicClient();
+    if (!db) return false;
+    const { count, error } = await published(db.from("articles").select("id", { count: "exact", head: true }));
+    if (error) throw new Error(`Could not reach the newsroom database: ${error.message}`);
+    return (count ?? 0) > 0;
+  },
+  ["has-published-stories"],
+  { revalidate: REVALIDATE, tags: [CONTENT_TAG] },
+);
+
+/** Database client for content queries, or null while sample stories are being shown. */
+async function contentDb() {
+  const db = publicClient();
+  if (!db) return null;
+  return (await hasPublishedStories()) ? db : null;
+}
+
+export async function showingSamples() {
+  return !(await hasPublishedStories().catch(() => false));
+}
+
+export const isSampleId = (id: string) => id.startsWith("demo-");
+
+// --------------------------------------------------------------------------
 // Public queries
 // --------------------------------------------------------------------------
 export const getBreaking = unstable_cache(
   async (): Promise<BreakingItem[]> => {
     const db = publicClient();
-    if (!db) return demo.breaking.map((b, i) => ({ id: `b${i}`, headline: b.headline, link: `/article/${b.slug}` }));
-    const { data } = await db
-      .from("breaking_news")
-      .select("id,headline,link")
-      .eq("active", true)
-      .order("created_at", { ascending: false })
-      .limit(8);
-    return (data as BreakingItem[]) ?? [];
+    if (db) {
+      const { data } = await db
+        .from("breaking_news")
+        .select("id,headline,link")
+        .eq("active", true)
+        .order("created_at", { ascending: false })
+        .limit(8);
+      if (data?.length || (await hasPublishedStories())) return (data as BreakingItem[]) ?? [];
+    }
+    return demo.breaking.map((b, i) => ({ id: `b${i}`, headline: b.headline, link: `/article/${b.slug}` }));
   },
   ["breaking"],
   { revalidate: REVALIDATE, tags: [CONTENT_TAG] },
@@ -149,7 +181,7 @@ type ListOpts = {
 const listOriginals = unstable_cache(
   async (opts: ListOpts): Promise<{ items: ArticleCard[]; total: number }> => {
     const { categories, type, limit = 12, offset = 0, order = "latest", excludeIds = [], since } = opts;
-    const db = publicClient();
+    const db = await contentDb();
     if (!db) {
       let all = demoArticles();
       if (categories?.length) all = all.filter((a) => categories.includes(a.category));
@@ -215,7 +247,7 @@ export async function getHomepage(lang: LangCode) {
 
 const articleBySlug = unstable_cache(
   async (slug: string): Promise<Article | null> => {
-    const db = publicClient();
+    const db = await contentDb();
     if (!db) return demoArticles().find((a) => a.slug === slug) ?? null;
     const { data } = await published(
       db.from("articles").select("*, author:profiles(full_name,slug,bio,avatar_url)"),
@@ -235,7 +267,7 @@ export const getArticle = (slug: string) => articleBySlug(slug);
 /** Other language versions of the same story (for hreflang links and the language switcher). */
 export const getTranslations = unstable_cache(
   async (groupId: string): Promise<{ slug: string; language: LangCode }[]> => {
-    const db = publicClient();
+    const db = await contentDb();
     if (!db) return [];
     const { data } = await published(db.from("articles").select("slug,language"))
       .or(`id.eq.${groupId},translation_of.eq.${groupId}`);
@@ -258,7 +290,7 @@ export async function getRelated(article: Article, lang: LangCode) {
 }
 
 export async function getLiveUpdates(article: Article): Promise<LiveUpdate[]> {
-  const db = publicClient();
+  const db = await contentDb();
   if (!db) {
     const d = (demo.articles as DemoArticle[]).find((x) => x.slug === article.slug);
     return (d?.live ?? []).map((u, i) => ({
@@ -308,7 +340,7 @@ export const SEARCH_PAGE_SIZE = 12;
 export async function searchArticles(p: SearchParams) {
   const page = Math.max(1, p.page ?? 1);
   const q = (p.q ?? "").trim().slice(0, 120);
-  const db = publicClient();
+  const db = await contentDb();
   if (!db) {
     let all = demoArticles();
     if (q) {
@@ -371,8 +403,8 @@ export const getAuthor = unstable_cache(
 
 export const getSitemapEntries = unstable_cache(
   async () => {
-    const db = publicClient();
-    if (!db) return demoArticles().map((a) => ({ slug: a.slug, updated_at: a.updated_at, published_at: a.published_at!, title: a.title, language: a.language, excerpt: a.excerpt, category: a.category }));
+    const db = await contentDb();
+    if (!db) return []; // sample stories are never offered to search engines
     const { data } = await published(db.from("articles").select("slug,updated_at,published_at,title,language,excerpt,category"))
       .order("published_at", { ascending: false })
       .limit(5000);

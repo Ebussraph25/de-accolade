@@ -49,6 +49,11 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   return (
     <div className="max-w-6xl">
       {sp.error === "permission" && <Notice tone="error">You don&apos;t have permission to open that page.</Notice>}
+      {published === 0 && isEditor && (
+        <Notice>
+          The public site is showing sample stories until the first real story is published. They disappear automatically the moment you publish one, and they are never shown to Google.
+        </Notice>
+      )}
       <PageHeader title={`Welcome, ${staff.full_name.split(" ")[0] || "editor"}`} description={isEditor ? "Here's what's happening in the newsroom." : "Your stories and their progress."}
         action={<Link href="/admin/articles/new" className="btn btn-primary">Write a story</Link>} />
 

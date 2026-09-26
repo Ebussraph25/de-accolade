@@ -8,7 +8,7 @@ import "@fontsource/libre-franklin/500.css";
 import "@fontsource/libre-franklin/600.css";
 import "@fontsource/libre-franklin/700.css";
 import "./globals.css";
-import { site } from "@/lib/site";
+import { isIndexable, site } from "@/lib/site";
 import { themeScript } from "@/components/site/ThemeToggle";
 
 export const metadata: Metadata = {
@@ -20,7 +20,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/", types: { "application/rss+xml": [{ url: "/feed.xml", title: `${site.fullName} RSS` }] } },
   openGraph: { type: "website", siteName: site.fullName, locale: site.locale, url: "/" },
   twitter: { card: "summary_large_image" },
-  robots: { index: true, follow: true, "max-image-preview": "large" },
+  robots: isIndexable() ? { index: true, follow: true, "max-image-preview": "large" } : { index: false, follow: false },
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : undefined,
   formatDetection: { telephone: false },
 };
 

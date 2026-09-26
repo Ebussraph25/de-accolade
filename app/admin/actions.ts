@@ -6,7 +6,7 @@ import { z } from "zod";
 import { ActionError, logActivity, requireAction } from "@/lib/auth";
 import { CONTENT_TAG, readingMinutes } from "@/lib/data";
 import { renderMarkdown } from "@/lib/markdown";
-import { serviceClient } from "@/lib/supabase/admin";
+import { randomBytes } from "node:crypto";
 import { serverClient } from "@/lib/supabase/server";
 import { allCategories } from "@/lib/taxonomy";
 import { slugify } from "@/lib/format";
@@ -288,9 +288,8 @@ export async function updateProfile(_prev: ActionResult, form: FormData): Promis
     if (!parsed.success) return { ok: false, message: parsed.error.issues[0].message };
     const { error } = await supabase.from("profiles").update({ full_name: parsed.data.full_name, bio: parsed.data.bio || null, avatar_url: parsed.data.avatar_url || null }).eq("id", staff.id);
     if (error) return dbError(error);
-    // Author page slug is set by the server (profiles.slug is not user-writable).
-    const admin = serviceClient();
-    if (admin && !staff.slug) await admin.from("profiles").update({ slug: `${slugify(parsed.data.full_name)}-${staff.id.slice(0, 4)}` }).eq("id", staff.id);
+    // Author page slug is created by the database (profiles.slug is not user-writable).
+    if (!staff.slug) await supabase.rpc("ensure_my_slug");
     refreshPublic();
     return { ok: true, message: "Profile saved." };
   })) as ActionResult;
@@ -303,15 +302,28 @@ export async function signOut() {
 }
 
 // ---------------------------------------------------------------------------
-// Team (super admin only; uses the service-role key on the server)
+// Team (super admin only). Accounts are created inside the database by
+// security-definer functions that re-check the caller is a super admin, so no
+// email service or service-role key is needed.
 // ---------------------------------------------------------------------------
 const roleSchema = z.enum(["super_admin", "editor", "reporter"]);
 
-export async function inviteStaff(_prev: ActionResult, form: FormData): Promise<ActionResult> {
+/** Readable temporary password, e.g. "Accolade-7kq2-Wm9x-p4Tz". */
+function temporaryPassword() {
+  const alphabet = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789";
+  const bytes = randomBytes(12);
+  const chars = Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
+  return `Accolade-${chars.slice(0, 4)}-${chars.slice(4, 8)}-${chars.slice(8, 12)}`;
+}
+
+function rpcError(error: { code?: string; message: string }): ActionResult {
+  if (["22023", "23505", "42501", "P0002"].includes(error.code ?? "")) return { ok: false, message: error.message };
+  return dbError(error);
+}
+
+export async function createStaff(_prev: ActionResult, form: FormData): Promise<ActionResult> {
   return (await guard(async () => {
-    await requireAction("super_admin");
-    const admin = serviceClient();
-    if (!admin) return { ok: false, message: "Add SUPABASE_SERVICE_ROLE_KEY to the server environment to manage the team." };
+    const { supabase } = await requireAction("super_admin");
     const parsed = z.object({
       email: z.string().trim().toLowerCase().email("Enter a valid email"),
       full_name: z.string().trim().min(2, "Enter their name").max(100),
@@ -319,29 +331,38 @@ export async function inviteStaff(_prev: ActionResult, form: FormData): Promise<
     }).safeParse(Object.fromEntries(form.entries()));
     if (!parsed.success) return { ok: false, message: parsed.error.issues[0].message };
     const { email, full_name, role } = parsed.data;
-    const { data, error } = await admin.auth.admin.inviteUserByEmail(email, {
-      data: { full_name },
-      redirectTo: `${site.url}/auth/callback?next=/admin/reset`,
-    });
-    if (error) return { ok: false, message: /already/i.test(error.message) ? "That email already has an account. Change their role in the list below." : error.message };
-    await admin.from("profiles").upsert({ id: data.user.id, full_name, role, slug: `${slugify(full_name)}-${data.user.id.slice(0, 4)}` });
-    await logActivity("team.invite", "profile", data.user.id, { email, role });
+    const password = temporaryPassword();
+    const { data, error } = await supabase.rpc("create_staff_account", { p_email: email, p_full_name: full_name, p_role: role, p_password: password });
+    if (error) return rpcError(error);
+    await logActivity("team.invite", "profile", String(data), { email, role });
     revalidatePath("/admin/team");
-    return { ok: true, message: `Invitation sent to ${email}.` };
+    return {
+      ok: true,
+      message: `Account created for ${email}. Temporary password: ${password} — share it privately; they can change it under My account after signing in at ${site.url}/admin/login.`,
+    };
   })) as ActionResult;
 }
 
 export async function setStaffRole(userId: string, role: string | null): Promise<ActionResult> {
   return (await guard(async () => {
-    const { staff } = await requireAction("super_admin");
+    const { staff, supabase } = await requireAction("super_admin");
     if (userId === staff.id) return { ok: false, message: "You can't change your own role. Ask another super admin." };
-    const admin = serviceClient();
-    if (!admin) return { ok: false, message: "Add SUPABASE_SERVICE_ROLE_KEY to manage the team." };
     const r = role === null ? null : roleSchema.parse(role);
-    const { error } = await admin.from("profiles").update({ role: r }).eq("id", userId);
-    if (error) return dbError(error);
+    const { error } = await supabase.rpc("set_staff_role", { p_user: userId, p_role: r });
+    if (error) return rpcError(error);
     await logActivity(r ? "team.role" : "team.revoke", "profile", userId, { role: r });
     revalidatePath("/admin/team");
     return { ok: true };
+  })) as ActionResult;
+}
+
+export async function resetStaffPassword(userId: string): Promise<ActionResult> {
+  return (await guard(async () => {
+    const { supabase } = await requireAction("super_admin");
+    const password = temporaryPassword();
+    const { error } = await supabase.rpc("reset_staff_password", { p_user: userId, p_password: password });
+    if (error) return rpcError(error);
+    await logActivity("team.password_reset", "profile", userId);
+    return { ok: true, message: `New temporary password: ${password}` };
   })) as ActionResult;
 }

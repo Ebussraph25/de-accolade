@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getArticle, getComments, getLiveUpdates, getRelated, getTranslations, youTubeId } from "@/lib/data";
+import { getArticle, getComments, getLiveUpdates, getRelated, getTranslations, isSampleId, youTubeId } from "@/lib/data";
 import { getLang } from "@/lib/lang";
 import { t } from "@/lib/i18n";
 import { renderMarkdown, splitForAd } from "@/lib/markdown";
@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    ...(isSampleId(a.id) && { robots: { index: false, follow: false } }),
     keywords: a.keywords || a.tags.join(", ") || undefined,
     alternates: {
       canonical: `/article/${a.slug}`,
@@ -62,7 +63,7 @@ export default async function ArticlePage({ params }: Props) {
   const d = t(lang);
   const [related, comments, live, translations] = await Promise.all([
     getRelated(a, lang),
-    hasSupabase ? getComments(a.id) : Promise.resolve([]),
+    hasSupabase && !isSampleId(a.id) ? getComments(a.id) : Promise.resolve([]),
     a.type === "live" ? getLiveUpdates(a) : Promise.resolve([]),
     getTranslations(a.translation_of ?? a.id),
   ]);
@@ -236,7 +237,7 @@ export default async function ArticlePage({ params }: Props) {
               </ul>
             )}
             <div className="mt-6">
-              {hasSupabase ? <CommentForm articleId={a.id} /> : <p className="text-muted">Comments open once the site is connected to the newsroom database.</p>}
+              {hasSupabase && !isSampleId(a.id) ? <CommentForm articleId={a.id} /> : <p className="text-muted">This is a sample story. Comments open on stories published by the newsroom.</p>}
               <p className="mt-3 text-xs text-muted">Comments are moderated. Be respectful. We remove abuse, spam and personal attacks.</p>
             </div>
           </section>

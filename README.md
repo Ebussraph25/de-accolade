@@ -23,7 +23,7 @@ Built with Next.js 16, React 19, TypeScript and Tailwind CSS 4. Supabase provide
 - Newsletter sign-up
 
 **Newsroom (`/admin`)**
-- Email/password sign-in, accounts created by super admins (no email service needed), password resets by super admins, enforced two-factor authentication (TOTP)
+- Email/password sign-in, accounts created by super admins (no email service needed), password resets by super admins, optional two-factor authentication (TOTP) that can be made compulsory
 - Roles: **Super admin** (everything, plus team and activity log), **Editor** (publish, edit, media, moderation, inbox) and **Reporter** (drafts and submitting for review). The database enforces these rules itself, not just the UI.
 - Story editor: Markdown with toolbar and live preview, image uploads, gallery with captions and credits, documents, YouTube or MP4 video, SEO title and description with Google preview, tags, byline, language and translation linking, scheduling, front-page lead and breaking flags
 - Live timeline posting for live coverage
@@ -52,7 +52,7 @@ Built with Next.js 16, React 19, TypeScript and Tailwind CSS 4. Supabase provide
 | Temporary address | https://de-accolade.vercel.app (hidden from Google until the real domain is connected) |
 | Database, sign-in and media | Supabase project `de-accolade` (`cuhgaezwszmwgbdlzlcy`), Paris (`eu-west-3`) |
 | Migrations applied | `supabase/migrations/0001_init.sql` to `0004_reset_2fa.sql` |
-| Vercel settings | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `RATE_LIMIT_SALT`, `REQUIRE_ADMIN_2FA=true`, `CRON_SECRET` |
+| Vercel settings | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `RATE_LIMIT_SALT`, `REQUIRE_ADMIN_2FA=false`, `CRON_SECRET` |
 
 Until the newsroom publishes its first real story, the public site shows clearly labelled **sample stories**. They are not stored in the database, are marked `noindex`, never appear in sitemaps, and vanish automatically once one real story is published.
 
@@ -84,7 +84,8 @@ Things to know about the free plans:
 
 ## Newsroom accounts
 
-- The first **super admin** has been created. Sign in at `/admin/login`. Two-factor authentication is required: on first sign-in you're taken to **My account** to scan a QR code with Google Authenticator or a similar app.
+- The first **super admin** has been created. Sign in at `/admin/login` with email and password.
+- Two-factor authentication is **optional**: anyone can turn it on for their own account under **My account**. To make it compulsory for every staff account, set `REQUIRE_ADMIN_2FA` to `true` in Vercel and redeploy.
 - Add colleagues from **Team & activity → Add a team member**. You get a temporary password to share privately; they change it under **My account**.
 - Forgotten password: a super admin clicks **Reset password** next to the person in **Team & activity**.
 - Lost phone / authenticator app: a super admin clicks **Reset 2FA** next to the person; they set it up again at their next sign-in.

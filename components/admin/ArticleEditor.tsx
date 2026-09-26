@@ -30,7 +30,10 @@ const toLocalInput = (iso: string | null | undefined) => {
 
 export function ArticleEditor({ article, role, originals, siteUrl, saved }: { article?: Article; role: Role; originals: Original[]; siteUrl: string; saved?: boolean }) {
   const isEditor = role !== "reporter";
-  const [state, action, pending] = useActionState<ActionResult, FormData>(saveArticle, saved ? { ok: true, message: "Saved." } : { ok: true });
+  const savedMessage = !article ? "Saved." : article.status === "published"
+    ? (article.published_at && new Date(article.published_at) > new Date() ? "Scheduled. It will go live at the time you chose." : "Published. It's now live on the site.")
+    : article.status === "pending" ? "Submitted for review." : "Saved as a draft. It's not visible on the site yet.";
+  const [state, action, pending] = useActionState<ActionResult, FormData>(saveArticle, saved ? { ok: true, message: savedMessage } : { ok: true });
   const e = state.errors ?? {};
 
   const [title, setTitle] = useState(article?.title ?? "");
@@ -42,6 +45,9 @@ export function ArticleEditor({ article, role, originals, siteUrl, saved }: { ar
   const [seoDesc, setSeoDesc] = useState(article?.seo_description ?? "");
   const [type, setType] = useState(article?.type ?? "article");
   const [status, setStatus] = useState(article?.status ?? "draft");
+  const [publishAt, setPublishAt] = useState(toLocalInput(article?.published_at));
+  const isLive = article?.status === "published" && !!article.published_at && new Date(article.published_at) <= new Date();
+  const isScheduled = article?.status === "published" && !!article.published_at && new Date(article.published_at) > new Date();
   const [image, setImage] = useState(article?.featured_image ?? "");
   const [gallery, setGallery] = useState<GalleryItem[]>(article?.gallery ?? []);
   const [attachments, setAttachments] = useState<Attachment[]>(article?.attachments ?? []);
@@ -83,10 +89,54 @@ export function ArticleEditor({ article, role, originals, siteUrl, saved }: { ar
     }
   }
 
+  const actionBar = (
+    <div className="flex flex-wrap items-center justify-between gap-3 border border-rule bg-bg px-5 py-4">
+      <p className="text-sm">
+        {isLive ? <><span className="font-semibold text-emerald-700 dark:text-emerald-400">Live on the site.</span> Changes appear after you click Update.</>
+          : isScheduled ? <><span className="font-semibold text-accent">Scheduled.</span> Goes live {new Date(article!.published_at!).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" })}.</>
+          : article?.status === "pending" ? <><span className="font-semibold">In review.</span> Not visible on the site yet.</>
+          : <><span className="font-semibold">Draft.</span> Not visible on the site yet.</>}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {isEditor ? (
+          isLive ? (
+            <>
+              <button type="submit" data-intent="update" className="btn btn-primary" disabled={pending}>{pending ? "Saving…" : "Update story"}</button>
+              <button type="submit" data-intent="draft" className="btn btn-ghost" disabled={pending} onClick={(e) => { if (!confirm("Take this story off the site and move it back to drafts?")) e.preventDefault(); }}>Unpublish</button>
+            </>
+          ) : (
+            <>
+              <button type="submit" data-intent="publish-now" className="btn btn-gold" disabled={pending}>{pending ? "Publishing…" : "Publish now"}</button>
+              <button type="submit" data-intent="draft" className="btn btn-ghost" disabled={pending}>Save draft</button>
+            </>
+          )
+        ) : (
+          <>
+            <button type="submit" data-intent="review" className="btn btn-primary" disabled={pending}>{pending ? "Sending…" : "Submit for review"}</button>
+            <button type="submit" data-intent="draft" className="btn btn-ghost" disabled={pending}>Save draft</button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <form
       // Submit manually so React doesn't reset the form (and the editor's fields) after saving.
-      onSubmit={(ev) => { ev.preventDefault(); const fd = new FormData(ev.currentTarget); startTransition(() => action(fd)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+      onSubmit={(ev) => {
+        ev.preventDefault();
+        const fd = new FormData(ev.currentTarget);
+        const intent = ((ev.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null)?.dataset.intent;
+        if (intent === "publish-now") { fd.set("status", "published"); fd.set("published_at", ""); setStatus("published"); setPublishAt(""); }
+        else if (intent === "update") { fd.set("status", "published"); setStatus("published"); }
+        else if (intent === "draft") { fd.set("status", "draft"); setStatus("draft"); }
+        else if (intent === "review") { fd.set("status", "pending"); setStatus("pending"); }
+        // Send the schedule time with the browser's timezone (Lagos), not as bare local time.
+        const when = fd.get("published_at");
+        if (typeof when === "string" && when) fd.set("published_at", new Date(when).toISOString());
+        startTransition(() => action(fd));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }}
       className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]"
     >
       <input type="hidden" name="id" value={article?.id ?? ""} />
@@ -98,7 +148,8 @@ export function ArticleEditor({ article, role, originals, siteUrl, saved }: { ar
 
       {/* ------------------------------------------------ main column */}
       <div className="grid min-w-0 grid-cols-1 content-start gap-6">
-        {state.message && <Notice tone={state.ok ? "info" : "error"}>{state.message}{state.ok && article?.status === "published" && <> <Link className="underline" href={`/article/${article.slug}`} target="_blank">View story</Link></>}</Notice>}
+        {state.message && <Notice tone={state.ok ? "info" : "error"}>{state.message}{state.ok && isLive && <> <Link className="font-semibold underline" href={`/article/${article!.slug}`} target="_blank">View it on the site</Link></>}</Notice>}
+        {actionBar}
 
         <div className="border border-rule bg-bg p-5">
           <label htmlFor="title" className="label">Headline</label>
@@ -237,6 +288,7 @@ export function ArticleEditor({ article, role, originals, siteUrl, saved }: { ar
             <div><label htmlFor="keywords" className="label">Keywords</label><input id="keywords" name="keywords" defaultValue={article?.keywords ?? ""} className="field" placeholder="anambra, youth, empowerment" /></div>
           </div>
         </div>
+        {actionBar}
       </div>
 
       {/* ------------------------------------------------ side column */}
@@ -252,9 +304,16 @@ export function ArticleEditor({ article, role, originals, siteUrl, saved }: { ar
           </select>
           {isEditor && (
             <>
-              <label htmlFor="published_at" className="label mt-4">Publish date and time</label>
-              <input id="published_at" name="published_at" type="datetime-local" defaultValue={toLocalInput(article?.published_at)} className="field" />
-              <p className="mt-1 text-xs text-muted">Leave empty to publish now. A future time schedules the story.</p>
+              <label htmlFor="published_at" className="label mt-4">Schedule for later <span className="font-normal text-muted">(optional)</span></label>
+              <div className="flex gap-2">
+                <input id="published_at" name="published_at" type="datetime-local" value={publishAt} onChange={(e) => setPublishAt(e.target.value)} className="field" />
+                {publishAt && <button type="button" onClick={() => setPublishAt("")} className="shrink-0 text-sm text-live hover:underline">Clear</button>}
+              </div>
+              <p className="mt-1 text-xs text-muted">
+                {publishAt && new Date(publishAt) > new Date()
+                  ? <span className="font-semibold text-accent">With Status set to Published, the story stays hidden until this time.</span>
+                  : "Leave empty. \"Publish now\" makes the story live immediately."}
+              </p>
               <div className="mt-4 grid gap-2 text-sm">
                 <label className="flex items-center gap-2"><input type="checkbox" name="featured" defaultChecked={article?.featured} className="h-4 w-4 accent-[var(--navy-900)]" /> Front-page lead story</label>
                 <label className="flex items-center gap-2"><input type="checkbox" name="breaking" defaultChecked={article?.breaking} className="h-4 w-4 accent-[var(--live)]" /> Breaking news</label>

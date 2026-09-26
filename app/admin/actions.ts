@@ -84,6 +84,20 @@ export async function saveArticle(_prev: ActionResult, form: FormData): Promise<
     if (!isEditor && !["draft", "pending"].includes(v.status))
       return { ok: false, message: "Reporters can save drafts or submit for review. An editor will publish." };
 
+    // Publish date: an explicit date schedules the story; "Publish now" (no date) makes it live
+    // immediately, except for stories already live, which keep their original date.
+    let publishedAt: string | undefined;
+    if (isEditor && v.published_at) {
+      const d = new Date(v.published_at);
+      if (!Number.isNaN(d.getTime())) publishedAt = d.toISOString();
+    } else if (isEditor && v.status === "published") {
+      const current = v.id
+        ? (await supabase.from("articles").select("status,published_at").eq("id", v.id).maybeSingle()).data
+        : null;
+      const alreadyLive = current?.status === "published" && current.published_at && new Date(current.published_at) <= new Date();
+      if (!alreadyLive) publishedAt = new Date().toISOString();
+    }
+
     const slug = slugify(v.slug || v.title);
     if (!slug) return { ok: false, errors: { slug: "Add a URL slug using letters and numbers" }, message: "Check the highlighted fields." };
 
@@ -114,7 +128,7 @@ export async function saveArticle(_prev: ActionResult, form: FormData): Promise<
       seo_description: v.seo_description || null,
       keywords: v.keywords || null,
       reading_minutes: readingMinutes(v.body),
-      published_at: isEditor && v.published_at ? new Date(v.published_at).toISOString() : undefined,
+      published_at: publishedAt,
     };
     const clean = Object.fromEntries(Object.entries(row).filter(([, x]) => x !== undefined));
 
@@ -132,7 +146,14 @@ export async function saveArticle(_prev: ActionResult, form: FormData): Promise<
 
     await logActivity(v.id ? "article.update" : "article.create", "article", id, { title: v.title, status: v.status });
     refreshPublic([`/article/${slug}`]);
-    return { ok: true, id, message: v.status === "published" ? "Published." : v.status === "pending" ? "Submitted for review." : "Saved." };
+    const scheduled = v.status === "published" && publishedAt && new Date(publishedAt) > new Date();
+    return {
+      ok: true,
+      id,
+      message: scheduled
+        ? `Scheduled. It goes live on ${new Date(publishedAt!).toLocaleString("en-NG", { timeZone: "Africa/Lagos", dateStyle: "medium", timeStyle: "short" })}.`
+        : v.status === "published" ? "Published. It's now live on the site." : v.status === "pending" ? "Submitted for review." : "Saved as a draft. It's not visible on the site yet.",
+    };
   });
   const out = res as ActionResult;
   if (out.ok && !form.get("id") && out.id) redirect(`/admin/articles/${out.id}?saved=1`);

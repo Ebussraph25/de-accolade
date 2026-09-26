@@ -51,7 +51,7 @@ Built with Next.js 16, React 19, TypeScript and Tailwind CSS 4. Supabase provide
 | Hosting | Vercel project `de-accolade`, served from Paris (`cdg1`) |
 | Temporary address | https://de-accolade.vercel.app (hidden from Google until the real domain is connected) |
 | Database, sign-in and media | Supabase project `de-accolade` (`cuhgaezwszmwgbdlzlcy`), Paris (`eu-west-3`) |
-| Migrations applied | `supabase/migrations/0001_init.sql`, `0002_staff_management.sql`, `0003_hardening.sql` |
+| Migrations applied | `supabase/migrations/0001_init.sql` to `0004_reset_2fa.sql` |
 | Vercel settings | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `RATE_LIMIT_SALT`, `REQUIRE_ADMIN_2FA=true`, `CRON_SECRET` |
 
 Until the newsroom publishes its first real story, the public site shows clearly labelled **sample stories**. They are not stored in the database, are marked `noindex`, never appear in sitemaps, and vanish automatically once one real story is published.
@@ -87,6 +87,9 @@ Things to know about the free plans:
 - The first **super admin** has been created. Sign in at `/admin/login`. Two-factor authentication is required: on first sign-in you're taken to **My account** to scan a QR code with Google Authenticator or a similar app.
 - Add colleagues from **Team & activity → Add a team member**. You get a temporary password to share privately; they change it under **My account**.
 - Forgotten password: a super admin clicks **Reset password** next to the person in **Team & activity**.
+- Lost phone / authenticator app: a super admin clicks **Reset 2FA** next to the person; they set it up again at their next sign-in.
+- Keep **at least two super admins** so each can recover the other.
+- Everyone can change their own password and name/bio under **My account**.
 - If every super admin is ever locked out, create a new one in the Supabase SQL editor:
   ```sql
   select public.create_staff_account('you@example.com', 'Your Name', 'super_admin', 'a-long-temporary-password');

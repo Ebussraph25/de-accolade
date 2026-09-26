@@ -366,3 +366,14 @@ export async function resetStaffPassword(userId: string): Promise<ActionResult> 
     return { ok: true, message: `New temporary password: ${password}` };
   })) as ActionResult;
 }
+
+export async function resetStaff2fa(userId: string): Promise<ActionResult> {
+  return (await guard(async () => {
+    const { staff, supabase } = await requireAction("super_admin");
+    if (userId === staff.id) return { ok: false, message: "Use My account to manage your own two-factor authentication." };
+    const { error } = await supabase.rpc("reset_staff_2fa", { p_user: userId });
+    if (error) return rpcError(error);
+    await logActivity("team.2fa_reset", "profile", userId);
+    return { ok: true, message: "Two-factor authentication cleared. They'll set it up again at their next sign-in." };
+  })) as ActionResult;
+}

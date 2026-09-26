@@ -1,10 +1,11 @@
 import { requirePage, roleLabel } from "@/lib/auth";
 import { serverClient } from "@/lib/supabase/server";
 import { formatDate, timeAgo } from "@/lib/format";
-import { createStaff } from "../../actions";
+import { createStaff, resetStaff2fa } from "../../actions";
 import { SimpleForm } from "@/components/admin/SimpleForm";
 import { RoleSelect } from "@/components/admin/RoleSelect";
 import { ResetPasswordButton } from "@/components/admin/ResetPasswordButton";
+import { ActionButton } from "@/components/admin/ActionButton";
 import { Notice, PageHeader, Panel } from "@/components/admin/ui";
 import type { Role } from "@/lib/types";
 
@@ -27,7 +28,7 @@ export default async function TeamPage() {
       "article.create": "created a story", "article.update": "updated a story", "article.delete": "deleted a story",
       "comment.approved": "approved a comment", "comment.rejected": "rejected a comment", "comment.spam": "marked a comment as spam", "comment.delete": "deleted a comment",
       "breaking.create": "added a breaking headline", "team.invite": "added a team member", "team.role": "changed a role",
-      "team.revoke": "removed access for a member", "team.password_reset": "reset a team member's password",
+      "team.revoke": "removed access for a member", "team.password_reset": "reset a team member's password", "team.2fa_reset": "reset a team member's two-factor authentication",
     };
     return `${map[e.action] ?? e.action}${t ? `: ${t}` : ""}`;
   };
@@ -63,7 +64,7 @@ export default async function TeamPage() {
                   <td className="pr-3">{p.email}</td>
                   <td className="pr-3">{p.last_sign_in_at ? timeAgo(p.last_sign_in_at) : "Not yet"}</td>
                   <td className="pr-3">{p.id === me.id ? roleLabel[me.role] : <RoleSelect userId={p.id} role={p.role} />}</td>
-                  <td className="text-right">{p.id !== me.id && <ResetPasswordButton userId={p.id} name={p.full_name} />}</td>
+                  <td className="whitespace-nowrap text-right">{p.id !== me.id && (<span className="inline-flex gap-4"><ResetPasswordButton userId={p.id} name={p.full_name} /><ActionButton className="text-accent" confirmText={`Clear ${p.full_name}'s two-factor authentication? Use this if they lost their phone. They'll set it up again at next sign-in.`} run={resetStaff2fa.bind(null, p.id)}>Reset 2FA</ActionButton></span>)}</td>
                 </tr>
               ))}
             </tbody>

@@ -1,0 +1,199 @@
+{
+  "_note": "Sample stories shown only while the site runs without a database (demo mode). They are placeholders for layout review, not reporting, and are never written to the database.",
+  "breaking": [
+    { "headline": "Community leader launches youth empowerment initiative in Anambra", "slug": "youth-empowerment-initiative-anambra" },
+    { "headline": "Registration opens for the regional schools debate championship", "slug": "schools-debate-championship-registration" },
+    { "headline": "New Yam Festival: organisers publish this year's programme of events", "slug": "new-yam-festival-programme" }
+  ],
+  "articles": [
+    {
+      "slug": "youth-empowerment-initiative-anambra",
+      "title": "Community leader launches youth empowerment initiative in Anambra",
+      "subtitle": "Two hundred young people will receive vocational training, starter kits and mentorship over the next twelve months.",
+      "excerpt": "The programme pairs trainees with local business owners in tailoring, phone repair, solar installation and agro-processing.",
+      "category": "community",
+      "type": "article",
+      "featured": true,
+      "breaking": true,
+      "hoursAgo": 2,
+      "views": 4120,
+      "tags": ["anambra", "youth", "empowerment"],
+      "body": "A youth empowerment initiative aimed at equipping two hundred young people with practical, income-earning skills was launched at the town hall on Saturday, drawing traditional rulers, parents and business owners from across the local government area.\n\nThe twelve-month programme will place trainees with established local artisans in tailoring, phone repair, solar installation and agro-processing. Each graduate is expected to leave with a starter kit and a mentor who has agreed to follow their progress for a further six months.\n\n## Why it matters\n\nOrganisers said the scheme was designed with local employers, who identified the trades where they struggle to find skilled hands. \"We did not want a certificate that sits in a drawer,\" one of the coordinators told De Accolade. \"We wanted every trainee to have a workshop to walk into.\"\n\n> The measure of this programme is simple: how many of these young people are earning a living a year from now.\n\nApplications are open to residents aged 18 to 30. Selection will be based on an interview and a short practical assessment, with places reserved for young women and persons with disabilities.\n\n## How to apply\n\nForms are available at the community secretariat and at participating workshops. The first cohort begins training next month."
+    },
+    {
+      "slug": "new-yam-festival-programme",
+      "title": "New Yam Festival: organisers publish this year's programme of events",
+      "subtitle": "Masquerade displays, a cultural lecture and a children's storytelling tent headline a week of celebrations.",
+      "excerpt": "The week-long celebration returns with an expanded cultural lecture series and a dedicated day for returning sons and daughters.",
+      "category": "igbo-heritage",
+      "type": "article",
+      "featured": true,
+      "hoursAgo": 5,
+      "views": 2890,
+      "tags": ["iri-ji", "festival", "igbo"],
+      "body": "The organising committee of this year's New Yam Festival has released the full programme of events, with a week of ceremonies that culminates in the traditional presentation of new yams at the palace.\n\nThe Iri Ji festival marks the end of the farming season and gives thanks for the harvest. It remains one of the most important dates in the Igbo calendar, drawing families home from Lagos, Abuja and the diaspora.\n\n## Highlights\n\n- A cultural lecture on the history of yam cultivation and its place in Igbo cosmology\n- Masquerade displays from neighbouring communities on the final afternoon\n- A children's storytelling tent run by local teachers, conducted in Igbo\n- A dedicated day for returning sons and daughters to register and reconnect\n\nThe committee has asked visitors to respect the sequence of rites, noting that no new yam is eaten before the traditional ruler performs the first ceremony."
+    },
+    {
+      "slug": "schools-debate-championship-registration",
+      "title": "Registration opens for the regional schools debate championship",
+      "excerpt": "Secondary schools have four weeks to register teams of three for the competition, which will be held in both English and Igbo.",
+      "category": "education",
+      "type": "article",
+      "hoursAgo": 9,
+      "views": 1310,
+      "tags": ["schools", "debate"],
+      "body": "Secondary schools across the region have four weeks to register teams for this year's debate championship, which for the first time will include a round conducted entirely in Igbo.\n\nEach school may enter one team of three students. Preliminary rounds will be held at zonal centres, with the final broadcast on Agunjiegbe Online Television.\n\nOrganisers say the bilingual round is intended to encourage students to reason and argue fluently in their mother tongue, not only to speak it at home."
+    },
+    {
+      "slug": "market-traders-new-stalls",
+      "title": "Market traders move into rebuilt stalls after two-year wait",
+      "excerpt": "Traders say the new structures are safer and better drained, but some are worried about the cost of the new levies.",
+      "category": "business",
+      "type": "article",
+      "hoursAgo": 14,
+      "views": 1975,
+      "tags": ["market", "traders"],
+      "body": "Traders at the main market began moving into rebuilt stalls this week, two years after a fire destroyed much of the old structure.\n\nThe new stalls have concrete floors, fire extinguishers on every row and a drainage system that traders say should end the flooding that followed every heavy rain.\n\nNot everyone is celebrating. Several traders told De Accolade they were concerned about new monthly levies, and asked the market association to publish a clear breakdown of charges."
+    },
+    {
+      "slug": "primary-health-centre-reopens",
+      "title": "Primary health centre reopens with maternity ward and solar power",
+      "excerpt": "The renovated clinic will offer antenatal care, immunisation and a 24-hour maternity service.",
+      "category": "health",
+      "type": "article",
+      "hoursAgo": 20,
+      "views": 1540,
+      "tags": ["health", "clinic"],
+      "body": "The community primary health centre has reopened after renovation, with a new maternity ward and a solar power system that staff say will keep vaccines cold through outages.\n\nThe centre will run antenatal clinics twice a week and routine immunisation every weekday morning. A midwife will be on duty at night for the first time.\n\nResidents have been urged to register with the centre so that health workers can follow up on children who miss immunisation appointments."
+    },
+    {
+      "slug": "local-league-final-preview",
+      "title": "Local league final: what to expect when the two form sides meet",
+      "excerpt": "Both clubs are unbeaten since the midway point, and the final will be streamed live for supporters abroad.",
+      "category": "sports",
+      "type": "article",
+      "hoursAgo": 26,
+      "views": 2210,
+      "tags": ["football", "grassroots"],
+      "body": "The two in-form sides of the season meet in Sunday's local league final, and neither has lost a match since the midway point of the campaign.\n\nThe home side relies on a quick counter-attack built around its two wide players, while the visitors have conceded only three goals in their last ten matches.\n\nAgunjiegbe Online Television will stream the final live on YouTube for supporters abroad, with commentary in English and Igbo."
+    },
+    {
+      "slug": "interview-woman-behind-community-library",
+      "title": "“Every child deserves a quiet place to read”: the woman behind the community library",
+      "subtitle": "A retired teacher explains how a donated room became a library with more than three thousand books.",
+      "excerpt": "What started as a shelf of donated books in a spare room now serves more than four hundred children every month.",
+      "category": "interviews",
+      "type": "article",
+      "featured": true,
+      "hoursAgo": 30,
+      "views": 3320,
+      "tags": ["library", "education", "interview"],
+      "body": "She spent thirty-one years in the classroom. In retirement, she has built something many schools in the area still lack: a library where any child can sit and read.\n\n**How did the library begin?**\n\nWith one shelf. A family donated a spare room, and I put my own books there. Then parents started bringing the books their children had outgrown.\n\n**What does it look like today?**\n\nWe have more than three thousand books, including a growing Igbo-language section. Four hundred children use it every month, most of them after school.\n\n**What do you need most?**\n\nVolunteers who can read with the younger children, and books written by Nigerian authors. Children should see themselves in the stories they read."
+    },
+    {
+      "slug": "nollywood-producers-local-locations",
+      "title": "Why more Nollywood producers are filming in our towns",
+      "excerpt": "Producers point to lower costs, authentic locations and hospitable communities. Hoteliers and caterers are feeling the benefit.",
+      "category": "movies",
+      "type": "article",
+      "hoursAgo": 40,
+      "views": 1880,
+      "tags": ["nollywood", "film"],
+      "body": "Film crews have become a familiar sight in the area this year, as producers look beyond Lagos and Asaba for authentic village and town locations.\n\nProducers point to lower costs, supportive traditional institutions and architecture that suits period dramas. Local hotels, caterers and transport operators say the productions have brought steady business.\n\nCommunity leaders are now discussing a simple permit process so that productions can be welcomed while respecting shrines and private property."
+    },
+    {
+      "slug": "highlife-revival-young-musicians",
+      "title": "The young musicians bringing highlife back to the dance floor",
+      "excerpt": "A new generation of bands is blending classic highlife guitar lines with Afrobeats production.",
+      "category": "music",
+      "type": "article",
+      "hoursAgo": 52,
+      "views": 1405,
+      "tags": ["highlife", "music"],
+      "body": "At weddings and festivals across the South East, a new generation of bands is reviving highlife, blending classic guitar lines with the drum programming of Afrobeats.\n\nThe musicians say older guests recognise the melodies, while younger audiences respond to the rhythm. Several groups now perform regularly on Agunjiegbe Online Television's weekend music segment."
+    },
+    {
+      "slug": "eyo-festival-explained",
+      "title": "The Eyo festival explained: history, rules and meaning",
+      "excerpt": "A guide to Lagos's iconic procession of white-robed masquerades and the customs visitors are expected to observe.",
+      "category": "yoruba-heritage",
+      "type": "article",
+      "hoursAgo": 60,
+      "views": 1720,
+      "tags": ["eyo", "yoruba", "lagos"],
+      "body": "The Eyo festival is one of the most recognisable cultural events in Lagos, with its procession of masquerades in flowing white robes and wide-brimmed hats.\n\nTraditionally, the festival is staged to honour a departed king or chief, or to mark a significant occasion. Spectators are expected to observe customs such as removing sandals and head coverings along the route.\n\nThis guide explains the history of the festival, its structure, and why it remains central to Lagos identity."
+    },
+    {
+      "slug": "durbar-festival-guide",
+      "title": "Durbar: the horsemen, the regalia and the history behind the parade",
+      "excerpt": "Rooted in centuries-old military tradition, the Durbar remains the North's most spectacular celebration.",
+      "category": "hausa-heritage",
+      "type": "article",
+      "hoursAgo": 75,
+      "views": 1260,
+      "tags": ["durbar", "hausa"],
+      "body": "The Durbar festival traces its origins to the cavalry parades of the emirates, when regiments rode before the emir to show their readiness and loyalty.\n\nToday the Durbar is held at the end of Ramadan and during Eid al-Adha, with horsemen in elaborate regalia, drummers and praise singers filling the streets.\n\nThis guide looks at the meaning of the regalia, the order of the procession and how the festival has adapted over time."
+    },
+    {
+      "slug": "town-union-wedding-coverage",
+      "title": "Photo story: a town union's mass traditional wedding",
+      "excerpt": "Twelve couples, one ceremony and a community determined to make celebration affordable.",
+      "category": "events",
+      "type": "gallery",
+      "hoursAgo": 90,
+      "views": 2650,
+      "tags": ["wedding", "event-coverage"],
+      "body": "Twelve couples exchanged vows at a single traditional ceremony organised by their town union, an initiative designed to reduce the cost of marriage rites for young families.\n\nThe union covered the cost of the venue, music and refreshments, while each family performed its own rites. De Accolade's event team documented the day."
+    },
+    {
+      "slug": "live-community-town-hall",
+      "title": "Live: community town hall on roads, water and security",
+      "excerpt": "Follow our live updates as residents question local officials on development priorities.",
+      "category": "local-news",
+      "type": "live",
+      "hoursAgo": 1,
+      "views": 980,
+      "tags": ["town-hall", "live"],
+      "body": "De Accolade is reporting live from the community town hall, where residents are questioning local officials on roads, water supply and security.",
+      "live": [
+        { "minutesAgo": 5, "body": "The session has closed. Officials have committed to publishing a timeline for the borehole repairs within two weeks." },
+        { "minutesAgo": 25, "body": "Youth representatives asked for streetlights on the market road. The chairman said the request would be added to next year's budget." },
+        { "minutesAgo": 50, "body": "Questions have now moved to water supply. Two of the community's three boreholes are out of service." },
+        { "minutesAgo": 70, "body": "The town hall has opened with a minute's silence, followed by an address from the president-general of the town union." }
+      ]
+    },
+    {
+      "slug": "lifestyle-home-cooking-traditions",
+      "title": "Recipes our grandmothers kept: preserving home cooking traditions",
+      "excerpt": "Families are recording elders' recipes before they are lost, from ofe owerri to miyan kuka.",
+      "category": "lifestyle",
+      "type": "article",
+      "hoursAgo": 110,
+      "views": 990,
+      "tags": ["food", "heritage"],
+      "body": "Across the country, families are recording the recipes of their elders, writing down quantities that were once measured by hand and memory.\n\nFrom ofe owerri to efo riro and miyan kuka, these dishes carry the history of families and communities. We spoke to three households about how they are keeping the tradition alive."
+    },
+    {
+      "slug": "agunjiegbe-tv-documentary-series",
+      "title": "Watch: Agunjiegbe Online TV's documentary series on our towns",
+      "excerpt": "A new series visits a different town each week, telling its history through the people who live there.",
+      "category": "traditional-events",
+      "type": "video",
+      "hoursAgo": 130,
+      "views": 1510,
+      "tags": ["documentary", "video"],
+      "body": "Agunjiegbe Online Television's documentary series visits a different town each week, telling its history through the people who live there: its elders, craftspeople, traders and young people.\n\nNew episodes are published on the channel every week."
+    },
+    {
+      "slug": "politics-ward-meetings-turnout",
+      "title": "Ward meetings see rising turnout as residents demand accountability",
+      "excerpt": "Attendance at ward-level meetings has grown as residents press for clearer reporting on constituency projects.",
+      "category": "politics",
+      "type": "article",
+      "hoursAgo": 150,
+      "views": 870,
+      "tags": ["politics", "accountability"],
+      "body": "Attendance at ward-level meetings has grown steadily this year, as residents press their representatives for clearer reporting on constituency projects.\n\nCommunity groups have begun publishing simple scorecards that track promised projects, and say the practice has made meetings more focused."
+    }
+  ]
+}

@@ -88,8 +88,15 @@ Things to know about the free plans:
 - Add colleagues from **Team & activity → Add a team member**. You get a temporary password to share privately; they change it under **My account**.
 - Forgotten password: a super admin clicks **Reset password** next to the person in **Team & activity**.
 - Lost phone / authenticator app: a super admin clicks **Reset 2FA** next to the person; they set it up again at their next sign-in.
-- Keep **at least two super admins** so each can recover the other.
+- A second super admin is optional; it just means either can recover the other from the website.
 - Everyone can change their own password and name/bio under **My account**.
+- If the only super admin forgets their password or loses their phone, whoever owns the Supabase account can fix it in **Supabase → SQL Editor**:
+  ```sql
+  -- new temporary password
+  select public.reset_staff_password((select id from auth.users where email = 'admin@example.com'), 'a-long-temporary-password');
+  -- clear two-factor authentication (lost phone)
+  select public.reset_staff_2fa((select id from auth.users where email = 'admin@example.com'));
+  ```
 - If every super admin is ever locked out, create a new one in the Supabase SQL editor:
   ```sql
   select public.create_staff_account('you@example.com', 'Your Name', 'super_admin', 'a-long-temporary-password');

@@ -3,13 +3,13 @@
  * Anything an editor might want to change without touching components lives here.
  */
 export const site = {
-  name: "De Accolade",
-  fullName: "De Accolade Magazine",
+  name: "De Accolade Magazine Hub",
+  fullName: "De Accolade Magazine Hub",
   tagline: "Your Voice. Our Community. Our Story.",
   parent: "Agunjiegbe Online Television",
   parentLine: "An Agunjiegbe Online Television Publication",
   description:
-    "De Accolade Magazine is a community-driven digital newspaper covering local news, culture and heritage, interviews, sports, entertainment and events from across Nigeria.",
+    "De Accolade Magazine Hub is a community-driven digital newspaper covering local news, culture and heritage, interviews, sports, entertainment and events from across Nigeria.",
   /**
    * Public address. Set NEXT_PUBLIC_SITE_URL to override; otherwise Vercel's production
    * domain is used automatically (the custom domain once one is connected).

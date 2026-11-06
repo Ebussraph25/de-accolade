@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await params;
   const r = resolve(p.section, p.category);
   if (!r) return {};
-  return { title: `${r.c.name} | ${r.s.name}`, description: `${r.c.name} stories from De Accolade Magazine.`, alternates: { canonical: `/${r.s.slug}/${r.c.slug}` } };
+  return { title: `${r.c.name} | ${r.s.name}`, description: `${r.c.name} stories from De Accolade Magazine Hub.`, alternates: { canonical: `/${r.s.slug}/${r.c.slug}` } };
 }
 
 export default async function CategoryPage({ params, searchParams }: Props) {

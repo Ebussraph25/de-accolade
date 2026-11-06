@@ -9,7 +9,7 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const r = await getAuthor((await params).slug);
   if (!r) return { title: "Author not found" };
-  return { title: r.author.full_name, description: r.author.bio ?? `Stories by ${r.author.full_name} on De Accolade.`, alternates: { canonical: `/author/${r.author.slug}` } };
+  return { title: r.author.full_name, description: r.author.bio ?? `Stories by ${r.author.full_name} on De Accolade Magazine Hub.`, alternates: { canonical: `/author/${r.author.slug}` } };
 }
 
 export default async function AuthorPage({ params }: Props) {

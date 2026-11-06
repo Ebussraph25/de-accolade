@@ -15,7 +15,7 @@ export function SocialLinks({ className = "" }: { className?: string }) {
     <ul className={className}>
       {links.map(({ href, label, Icon }) => (
         <li key={label}>
-          <a href={href} target="_blank" rel="noopener noreferrer" aria-label={`De Accolade on ${label}`} className="block opacity-85 hover:text-gold-400 hover:opacity-100">
+          <a href={href} target="_blank" rel="noopener noreferrer" aria-label={`De Accolade Magazine Hub on ${label}`} className="block opacity-85 hover:text-gold-400 hover:opacity-100">
             <Icon />
           </a>
         </li>

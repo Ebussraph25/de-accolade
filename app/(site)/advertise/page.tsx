@@ -4,7 +4,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Advertise with us",
-  description: "Banner advertising, sponsored stories, business promotion and brand partnerships on De Accolade Magazine.",
+  description: "Banner advertising, sponsored stories, business promotion and brand partnerships on De Accolade Magazine Hub.",
   alternates: { canonical: "/advertise" },
 };
 
@@ -18,7 +18,7 @@ const options = [
 export default function AdvertisePage() {
   return (
     <div className="container-page max-w-5xl pt-10">
-      <h1 className="section-rule headline pt-4 text-[2.4rem] md:text-[3rem]">Advertise with De Accolade</h1>
+      <h1 className="section-rule headline pt-4 text-[2.4rem] md:text-[3rem]">Advertise with De Accolade Magazine Hub</h1>
       <p className="mt-4 max-w-2xl font-serif text-xl text-muted">Put your brand in front of an engaged community audience across our website, newsletter and {site.parent}.</p>
       <ul className="mt-10 grid gap-6 sm:grid-cols-2">
         {options.map((o) => (

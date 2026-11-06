@@ -48,7 +48,7 @@ export function SearchDialog({ label = "Search" }: { label?: string }) {
           className="flex items-center gap-3 border-b-2 border-gold-500 px-4 py-3"
         >
           <SearchIcon className="h-5 w-5 shrink-0 text-muted" />
-          <label htmlFor="site-search" className="sr-only">Search De Accolade</label>
+          <label htmlFor="site-search" className="sr-only">Search De Accolade Magazine Hub</label>
           <input id="site-search" name="q" autoFocus placeholder="Search stories, videos and people" className="w-full bg-transparent py-2 font-serif text-xl outline-none placeholder:text-muted" />
           <button type="button" onClick={() => setOpen(false)} aria-label="Close search" className="p-1 text-muted hover:text-fg"><CloseIcon /></button>
         </form>

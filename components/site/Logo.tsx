@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 /**
- * De Accolade brand assets (public/brand). Each has a navy version for light backgrounds
+ * De Accolade Magazine Hub brand assets (public/brand). Each has a navy version for light backgrounds
  * and a "-light" version (navy strokes turned white) for navy / dark-mode backgrounds.
  */
 const ASSETS = {
@@ -30,14 +30,14 @@ export function BrandMark({ className = "h-10 w-auto", tone = "auto" }: { classN
   return <BrandImg kind="mark" tone={tone} className={className} />;
 }
 
-/** Horizontal lockup: monogram + "DE ACCOLADE MAGAZINE". */
+/** Horizontal lockup: monogram + "DE ACCOLADE MAGAZINE HUB". */
 export function Wordmark({ size = "lg", tone = "auto" }: { size?: "sm" | "lg"; tone?: Tone }) {
   const big = size === "lg";
   return (
     <span className="inline-flex items-center gap-3 md:gap-4">
       <BrandImg kind="mark" tone={tone} priority={big} className={big ? "h-12 w-auto md:h-[4.5rem]" : "h-9 w-auto"} />
       <span className="flex flex-col items-start">
-        <BrandImg kind="wordmark" tone={tone} priority={big} alt="De Accolade Magazine" className={big ? "h-8 w-auto md:h-12" : "h-6 w-auto"} />
+        <BrandImg kind="wordmark" tone={tone} priority={big} alt="De Accolade Magazine Hub" className={big ? "h-8 w-auto md:h-12" : "h-6 w-auto"} />
         {big && (
           <span className="mt-2 hidden text-[0.78rem] font-medium tracking-[0.02em] text-muted sm:block">
             An Agunjiegbe Online Television Publication

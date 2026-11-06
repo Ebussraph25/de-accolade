@@ -28,11 +28,11 @@ export default function AboutPage() {
           <h2>What we do</h2>
           <p>We report the stories that shape our communities: local news, development, business, education and health, alongside the culture and heritage that make each community distinct. Our reporting is published in English, with Igbo, Yoruba and Hausa editions reviewed by our editors.</p>
           <h2>Why we exist</h2>
-          <p>Too many communities only make the news when something goes wrong. De Accolade exists to amplify community voices, celebrate achievement, document heritage for the next generation, and hold leaders to account with fair, accurate reporting.</p>
+          <p>Too many communities only make the news when something goes wrong. De Accolade Magazine Hub exists to amplify community voices, celebrate achievement, document heritage for the next generation, and hold leaders to account with fair, accurate reporting.</p>
           <h2>Our standards</h2>
           <p>We verify before we publish, correct mistakes openly, keep sponsored content clearly labelled and separate from news, and give people the chance to respond to stories about them. To report an error, <Link href="/contact">contact the newsroom</Link>.</p>
           <h2>Part of {site.parent}</h2>
-          <p>De Accolade works alongside {site.parent}, whose video reporting, interviews and documentaries appear throughout this site. <a href={site.youtube.handleUrl}>Watch the channel on YouTube</a>.</p>
+          <p>De Accolade Magazine Hub works alongside {site.parent}, whose video reporting, interviews and documentaries appear throughout this site. <a href={site.youtube.handleUrl}>Watch the channel on YouTube</a>.</p>
         </div>
         <aside>
           <h2 className="border-t-2 border-gold-500 pt-3 font-semibold">What we cover</h2>

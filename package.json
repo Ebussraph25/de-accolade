@@ -2,7 +2,7 @@
   "name": "de-accolade",
   "version": "1.0.0",
   "private": true,
-  "description": "De Accolade Magazine — digital news platform (an Agunjiegbe Online Television publication)",
+  "description": "De Accolade Magazine Hub — digital news platform (an Agunjiegbe Online Television publication)",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

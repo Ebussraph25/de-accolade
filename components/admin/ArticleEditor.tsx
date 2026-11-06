@@ -278,7 +278,7 @@ export function ArticleEditor({ article, role, originals, siteUrl, saved }: { ar
           <h2 className="font-semibold">Search &amp; social</h2>
           <div className="mt-3 border border-rule p-4">
             <p className="text-xs text-muted">Google preview</p>
-            <p className="mt-1 truncate text-[1.15rem] text-[#1a0dab] dark:text-[#8ab4f8]">{seoTitle || title || "Headline"} | De Accolade</p>
+            <p className="mt-1 truncate text-[1.15rem] text-[#1a0dab] dark:text-[#8ab4f8]">{seoTitle || title || "Headline"} | De Accolade Magazine Hub</p>
             <p className="truncate text-sm text-emerald-800 dark:text-emerald-300">{siteUrl}/article/{effectiveSlug}</p>
             <p className="line-clamp-2 text-sm text-muted">{seoDesc || excerpt || "Add a summary to control how this story appears in search results."}</p>
           </div>

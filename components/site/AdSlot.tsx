@@ -14,7 +14,7 @@ export function AdSlot({ format = "leaderboard", className = "" }: { format?: "l
         href="/advertise"
         className={`flex ${size} flex-col items-center justify-center gap-1 border border-dashed border-gold-500/60 bg-gold-100/40 px-4 text-center dark:bg-navy-900/40`}
       >
-        <span className="font-serif text-lg font-semibold text-navy-900 dark:text-gold-400">Reach the De Accolade community</span>
+        <span className="font-serif text-lg font-semibold text-navy-900 dark:text-gold-400">Reach the De Accolade Magazine Hub community</span>
         <span className="text-sm text-muted">Banner, sponsored story and event packages. See advertising options.</span>
       </Link>
     </aside>

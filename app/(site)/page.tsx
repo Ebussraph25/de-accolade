@@ -174,7 +174,7 @@ export default async function HomePage() {
         <div className="grid items-center gap-6 border-y-2 border-gold-500 py-8 md:grid-cols-[1fr_auto]">
           <div>
             <p className="headline text-[1.6rem]">Planning a wedding, launch or festival?</p>
-            <p className="mt-1 text-muted">Our events desk covers it with photography, video and a published story on De Accolade.</p>
+            <p className="mt-1 text-muted">Our events desk covers it with photography, video and a published story on De Accolade Magazine Hub.</p>
           </div>
           <Link href="/event-coverage" className="btn btn-primary">Book event coverage</Link>
         </div>

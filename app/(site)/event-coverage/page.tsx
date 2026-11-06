@@ -8,7 +8,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Event Coverage",
-  description: "Book De Accolade and Agunjiegbe Online Television to cover your wedding, community event, corporate function, festival or interview.",
+  description: "Book De Accolade Magazine Hub and Agunjiegbe Online Television to cover your wedding, community event, corporate function, festival or interview.",
   alternates: { canonical: "/event-coverage" },
 };
 
@@ -24,7 +24,7 @@ const steps = [
   { title: "Send a request", body: "Tell us the date, venue and what you want covered using the form below." },
   { title: "We confirm the details", body: "Our events desk calls you within one working day to agree coverage and a quote." },
   { title: "We cover your event", body: "Our crew arrives early and documents the day in photos and video." },
-  { title: "Your story goes live", body: "We publish your story on De Accolade and share highlights on Agunjiegbe Online TV." },
+  { title: "Your story goes live", body: "We publish your story on De Accolade Magazine Hub and share highlights on Agunjiegbe Online TV." },
 ];
 
 export default async function EventCoveragePage() {

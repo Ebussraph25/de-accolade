@@ -1,6 +1,6 @@
-# De Accolade
+# De Accolade Magazine Hub
 
-**De Accolade Magazine** is a digital newspaper and newsroom CMS. It is an Agunjiegbe Online Television publication.
+**De Accolade Magazine Hub** is a digital newspaper and newsroom CMS. It is an Agunjiegbe Online Television publication.
 *Your Voice. Our Community. Our Story.*
 
 Built with Next.js 16, React 19, TypeScript and Tailwind CSS 4. Supabase provides the database, authentication and media storage, and the site deploys to Vercel.

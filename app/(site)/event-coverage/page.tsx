@@ -79,7 +79,7 @@ export default async function EventCoveragePage() {
           <p className="mt-3 text-muted">Tell us about your event. There is no obligation until you approve a quote.</p>
           <dl className="mt-6 space-y-3 text-sm">
             <div><dt className="font-semibold">Email</dt><dd><a className="text-link underline" href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></dd></div>
-            {site.contactPhone && <div><dt className="font-semibold">Phone</dt><dd><a className="text-link underline" href={`tel:${site.contactPhone}`}>{site.contactPhone}</a></dd></div>}
+            {site.contactPhone && <div><dt className="font-semibold">Phone</dt><dd><a className="text-link underline" href={`tel:${site.contactPhone.replace(/[^\d+]/g, "")}`}>{site.contactPhone}</a></dd></div>}
           </dl>
         </div>
         <div className="border border-rule p-6 md:p-8"><BookingForm /></div>

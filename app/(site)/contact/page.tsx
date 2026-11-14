@@ -18,7 +18,7 @@ export default function ContactPage() {
         <p className="mt-4 font-serif text-lg text-muted">Got a story, a correction or an idea? We read every message.</p>
         <dl className="mt-8 space-y-5">
           <div><dt className="font-semibold">Email</dt><dd><a className="text-link underline decoration-gold-500 underline-offset-2" href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></dd></div>
-          {site.contactPhone && <div><dt className="font-semibold">Phone</dt><dd><a className="text-link underline" href={`tel:${site.contactPhone}`}>{site.contactPhone}</a></dd></div>}
+          {site.contactPhone && <div><dt className="font-semibold">Phone</dt><dd><a className="text-link underline" href={`tel:${site.contactPhone.replace(/[^\d+]/g, "")}`}>{site.contactPhone}</a></dd></div>}
           {site.whatsapp && <div><dt className="font-semibold">WhatsApp</dt><dd><a className="text-link underline" href={`https://wa.me/${site.whatsapp.replace(/\D/g, "")}`}>Message us on WhatsApp</a></dd></div>}
           <div><dt className="font-semibold">Event coverage</dt><dd><Link href="/event-coverage" className="text-link underline">Book our events desk</Link></dd></div>
           <div><dt className="font-semibold">Advertising</dt><dd><Link href="/advertise" className="text-link underline">Advertising options</Link></dd></div>

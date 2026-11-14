@@ -20,7 +20,7 @@ export const site = {
   ).replace(/\/$/, ""),
   locale: "en_NG",
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "newsroom@deaccolade.com",
-  contactPhone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "",
+  contactPhone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "+234 803 894 2507",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "",
   youtube: {
     handleUrl: "https://www.youtube.com/@OnuigboEmeka",

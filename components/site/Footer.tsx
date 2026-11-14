@@ -22,6 +22,7 @@ export function Footer() {
           <Link href="/" aria-label="De Accolade Magazine Hub home" className="text-white"><Wordmark size="sm" tone="onDark" /></Link>
           <p className="mt-4 max-w-sm font-serif text-lg italic text-white/90">{site.tagline}</p>
           <p className="mt-3 max-w-sm text-[0.9rem] leading-relaxed text-white/70">{site.parentLine}. Community journalism, culture and heritage from Nigeria and the diaspora.</p>
+          {site.contactPhone && <p className="mt-3 text-[0.9rem] text-white/80">Call: <a href={`tel:${site.contactPhone.replace(/[^\d+]/g, "")}`} className="font-semibold text-white hover:text-gold-400">{site.contactPhone}</a></p>}
           <SocialLinks className="mt-5 flex items-center gap-4 text-white" />
         </div>
         {col("Sections", [

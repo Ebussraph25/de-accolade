@@ -4,6 +4,7 @@ import demo from "./demo-content.json";
 import { publicClient } from "./supabase/public";
 import { site } from "./site";
 import type { ArticleType, LangCode } from "./taxonomy";
+import type { AdPlacement } from "./ads";
 import type {
   Article,
   ArticleCard,
@@ -450,3 +451,47 @@ export function youTubeId(url: string | null | undefined) {
   const m = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/|live\/)([\w-]{11})/);
   return m?.[1] ?? null;
 }
+
+// --------------------------------------------------------------------------
+// Adverts and site settings
+// --------------------------------------------------------------------------
+export type LiveAdvert = { id: string; advertiser: string; image_url: string; link: string | null; alt_text: string | null; placement: AdPlacement };
+
+/** Adverts running today (the database only returns active ones within their dates). */
+export const getLiveAdverts = unstable_cache(
+  async (): Promise<LiveAdvert[]> => {
+    const db = publicClient();
+    if (!db) return [];
+    const { data, error } = await db.from("adverts").select("id,advertiser,image_url,link,alt_text,placement");
+    if (error) return [];
+    return (data ?? []) as LiveAdvert[];
+  },
+  ["adverts"],
+  { revalidate: REVALIDATE, tags: [CONTENT_TAG] },
+);
+
+export type SocialKey = "facebook" | "instagram" | "x" | "tiktok" | "youtube" | "whatsapp";
+
+/** Social links: values saved in the newsroom's Site settings win over the built-in defaults. */
+export const getSocialLinks = unstable_cache(
+  async (): Promise<Record<SocialKey, string>> => {
+    const links: Record<SocialKey, string> = {
+      facebook: site.social.facebook,
+      instagram: site.social.instagram,
+      x: site.social.x,
+      tiktok: site.social.tiktok,
+      youtube: site.social.youtube,
+      whatsapp: site.whatsapp,
+    };
+    const db = publicClient();
+    if (db) {
+      const { data } = await db.from("site_settings").select("key,value");
+      for (const row of (data ?? []) as { key: SocialKey; value: string }[]) {
+        if (row.key in links) links[row.key] = row.value.trim();
+      }
+    }
+    return links;
+  },
+  ["social-links"],
+  { revalidate: REVALIDATE, tags: [CONTENT_TAG] },
+);

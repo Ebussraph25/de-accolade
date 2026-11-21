@@ -17,12 +17,14 @@ export const sections: Section[] = [
   {
     slug: "news",
     name: "News",
-    description: "Breaking stories, local reporting, politics, security and defence, business, education and health.",
+    description: "Breaking stories, local reporting, politics, security and defence, crime, foreign news, business, education and health.",
     categories: cats("news", [
       ["breaking-news", "Breaking News"],
       ["local-news", "Local News"],
       ["politics", "Politics"],
       ["security-defence", "Security & Defence"],
+      ["crime", "Crime"],
+      ["foreign-news", "Foreign News"],
       ["community", "Community"],
       ["business", "Business"],
       ["education", "Education"],

@@ -26,6 +26,8 @@ export default async function PanelLayout({ children }: { children: React.ReactN
       { href: "/admin/comments", label: "Comments", badge: pendingComments },
       { href: "/admin/breaking", label: "Breaking ticker" },
       { href: "/admin/inbox", label: "Inbox", badge: newInbox },
+      { href: "/admin/adverts", label: "Adverts" },
+      { href: "/admin/settings", label: "Site settings" },
     ] : []),
     ...(staff.role === "super_admin" ? [{ href: "/admin/team", label: "Team & activity" }] : []),
     { href: "/admin/account", label: "My account" },

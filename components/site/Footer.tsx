@@ -2,7 +2,7 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import { sections } from "@/lib/taxonomy";
 import { Wordmark } from "./Logo";
-import { SocialLinks } from "./SocialLinks";
+import { FollowUs } from "./SocialLinks";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -23,7 +23,6 @@ export function Footer() {
           <p className="mt-4 max-w-sm font-serif text-lg italic text-white/90">{site.tagline}</p>
           <p className="mt-3 max-w-sm text-[0.9rem] leading-relaxed text-white/70">{site.parentLine}. Community journalism, culture and heritage from Nigeria and the diaspora.</p>
           {site.contactPhone && <p className="mt-3 text-[0.9rem] text-white/80">Call: <a href={`tel:${site.contactPhone.replace(/[^\d+]/g, "")}`} className="font-semibold text-white hover:text-gold-400">{site.contactPhone}</a></p>}
-          <SocialLinks className="mt-5 flex items-center gap-4 text-white" />
         </div>
         {col("Sections", [
           ...sections.map((s) => ({ href: s.slug === "events" ? "/events" : `/${s.slug}`, label: s.name })),
@@ -45,6 +44,7 @@ export function Footer() {
           { href: "/terms", label: "Terms of use" },
         ])}
       </div>
+      <FollowUs />
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col gap-2 py-5 text-[0.8125rem] text-white/60 md:flex-row md:justify-between">
           <p>© {year} {site.fullName}. A subsidiary of {site.parent}. All rights reserved.</p>

@@ -398,3 +398,81 @@ export async function resetStaff2fa(userId: string): Promise<ActionResult> {
     return { ok: true, message: "Two-factor authentication cleared. They'll set it up again at their next sign-in." };
   })) as ActionResult;
 }
+
+// ---------------------------------------------------------------------------
+// Adverts
+// ---------------------------------------------------------------------------
+const optionalDate = z.string().trim().refine((v) => !v || /^\d{4}-\d{2}-\d{2}$/.test(v), "Use a valid date").optional();
+
+export async function addAdvert(_prev: ActionResult, form: FormData): Promise<ActionResult> {
+  return (await guard(async () => {
+    const { staff, supabase } = await requireAction("editor");
+    const parsed = z.object({
+      advertiser: z.string().trim().min(2, "Enter the advertiser's name").max(120),
+      image_url: z.string().trim().startsWith("https://", "Upload the advert image first"),
+      link: z.string().trim().max(500).refine((l) => !l || l.startsWith("/") || /^https?:\/\//.test(l), "Use a full web address starting with https://, or a site path like /contact").optional(),
+      alt_text: z.string().trim().max(200).optional(),
+      placement: z.enum(["leaderboard", "rectangle", "inline"], { message: "Choose where the advert shows" }),
+      start_date: optionalDate,
+      end_date: optionalDate,
+    }).safeParse(Object.fromEntries(form.entries()));
+    if (!parsed.success) return { ok: false, message: parsed.error.issues[0].message };
+    const d = parsed.data;
+    if (d.start_date && d.end_date && d.end_date < d.start_date) return { ok: false, message: "The end date is before the start date." };
+    const { error } = await supabase.from("adverts").insert({
+      advertiser: d.advertiser, image_url: d.image_url, link: d.link || null, alt_text: d.alt_text || null,
+      placement: d.placement, start_date: d.start_date || null, end_date: d.end_date || null, created_by: staff.id,
+    });
+    if (error) return dbError(error);
+    await logActivity("advert.create", "advert", undefined, { advertiser: d.advertiser, placement: d.placement });
+    refreshPublic();
+    revalidatePath("/admin/adverts");
+    return { ok: true, message: "Advert saved. It shows on the site within a minute (on its start date if you set one)." };
+  })) as ActionResult;
+}
+
+export async function setAdvertActive(id: string, active: boolean | "delete"): Promise<ActionResult> {
+  return (await guard(async () => {
+    const { supabase } = await requireAction("editor");
+    const { error } = active === "delete"
+      ? await supabase.from("adverts").delete().eq("id", id)
+      : await supabase.from("adverts").update({ active }).eq("id", id);
+    if (error) return dbError(error);
+    await logActivity(active === "delete" ? "advert.delete" : active ? "advert.resume" : "advert.pause", "advert", id);
+    refreshPublic();
+    revalidatePath("/admin/adverts");
+    return { ok: true };
+  })) as ActionResult;
+}
+
+// ---------------------------------------------------------------------------
+// Site settings (social media links)
+// ---------------------------------------------------------------------------
+const SOCIAL_KEYS = ["facebook", "instagram", "x", "tiktok", "youtube", "whatsapp"] as const;
+
+export async function saveSocialLinks(_prev: ActionResult, form: FormData): Promise<ActionResult> {
+  return (await guard(async () => {
+    const { staff, supabase } = await requireAction("editor");
+    const rows: { key: string; value: string; updated_by: string; updated_at: string }[] = [];
+    for (const key of SOCIAL_KEYS) {
+      let value = String(form.get(key) ?? "").trim();
+      if (key === "whatsapp") {
+        // Accept 0803…, +234 803…, or a wa.me link; store an international number.
+        const digits = value.replace(/^https?:\/\/(wa\.me|api\.whatsapp\.com)\/?(send\?phone=)?/i, "").replace(/\D/g, "");
+        value = !digits ? "" : digits.startsWith("0") ? `+234${digits.slice(1)}` : `+${digits}`;
+        if (value && (digits.length < 10 || digits.length > 15)) return { ok: false, message: "Enter a valid WhatsApp number, e.g. 0803 894 2507." };
+      } else if (value) {
+        if (!/^https?:\/\//i.test(value)) value = `https://${value}`;
+        try { new URL(value); } catch { return { ok: false, message: `The ${key === "x" ? "X (Twitter)" : key} link doesn't look like a web address.` }; }
+        if (value.length > 300) return { ok: false, message: "One of the links is too long." };
+      }
+      rows.push({ key, value, updated_by: staff.id, updated_at: new Date().toISOString() });
+    }
+    const { error } = await supabase.from("site_settings").upsert(rows, { onConflict: "key" });
+    if (error) return dbError(error);
+    await logActivity("settings.social", "site_settings");
+    refreshPublic();
+    revalidatePath("/admin/settings");
+    return { ok: true, message: "Saved. The new links show on the site within a minute." };
+  })) as ActionResult;
+}

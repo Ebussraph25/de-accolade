@@ -23,12 +23,14 @@ export default async function TeamPage() {
   const people = (members ?? []) as Member[];
   const entries = (log ?? []) as unknown as { id: number; action: string; entity: string | null; meta: Record<string, string> | null; created_at: string; actor: { full_name: string } | null }[];
   const describe = (e: (typeof entries)[number]) => {
-    const t = e.meta?.title || e.meta?.headline || e.meta?.email || "";
+    const t = e.meta?.title || e.meta?.headline || e.meta?.email || e.meta?.advertiser || "";
     const map: Record<string, string> = {
       "article.create": "created a story", "article.update": "updated a story", "article.delete": "deleted a story",
       "comment.approved": "approved a comment", "comment.rejected": "rejected a comment", "comment.spam": "marked a comment as spam", "comment.delete": "deleted a comment",
       "breaking.create": "added a breaking headline", "team.invite": "added a team member", "team.role": "changed a role",
       "team.revoke": "removed access for a member", "team.password_reset": "reset a team member's password", "team.2fa_reset": "reset a team member's two-factor authentication",
+      "advert.create": "added an advert", "advert.pause": "paused an advert", "advert.resume": "resumed an advert", "advert.delete": "deleted an advert",
+      "settings.social": "updated the social media links",
     };
     return `${map[e.action] ?? e.action}${t ? `: ${t}` : ""}`;
   };
